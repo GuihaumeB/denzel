@@ -4,7 +4,18 @@ const pLimit = require('p-limit');
 const pSettle = require('p-settle');
 const {IMDB_NAME_URL, IMDB_URL, P_LIMIT} = require('./constants');
 
-const MongoClient = require('mongodb').MongoClient;
+const Express = require("express");
+const BodyParser = require("body-parser");
+const MongoClient = require("mongodb").MongoClient;
+const ObjectId = require("mongodb").ObjectID;
+
+var app = Express();
+
+app.use(BodyParser.json());
+app.use(BodyParser.urlencoded({ extended: true }));
+
+//app.listen(3000, () => {});
+
 const uri = "mongodb+srv://GBZ73:Tiplouf3foulpit@webdevdenzel-c735r.azure.mongodb.net/test?retryWrites=true";
 const client = new MongoClient(uri, { useNewUrlParser: true });
 client.connect(err => {
