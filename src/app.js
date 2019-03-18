@@ -91,7 +91,7 @@ app.get("/movies/search", (request, response) => {
         });
 });
 
-app.get("/movies/:id", (request, response) => {
+app.post("/movies/:id", (request, response) => {
 
     collection.findOne({ id: request.params.id }).toArray((error, result) => {
 
