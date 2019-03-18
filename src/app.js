@@ -91,17 +91,17 @@ app.get("/movies/search", (request, response) => {
         });
 });
 
-app.post("/movies/:id", (request, response) => {
+app.get("/movies/:id", (request, response) => {
+    collection.findOne({ id: request.params.id }, (err, result) => {
+        if (err) {
+            return response.status(500).send(err);
 
-    collection.findOne({ id: request.params.id }).toArray((error, result) => {
-
-        if (error)
-        {
-            return response.status(500).send(error);
         }
         response.send(result);
-
     });
 
 });
 
+app.post("/movies/:id", (request, response) => {
+
+});
