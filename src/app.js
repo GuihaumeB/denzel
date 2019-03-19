@@ -1,13 +1,12 @@
 const Express = require("express");
 const BodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
-const ObjectId = require("mongodb").ObjectID;
 const imdb = require("./imdb");
 const DENZEL_IMDB_ID = "nm0000243";
 
-const CONNECTION_URL = "mongodb+srv://GBZ73:Tiplouf3foulpit@webdevdenzel-c735r.azure.mongodb.net/test?retryWrites=true";
+const uri = "mongodb+srv://GBZ73:Tiplouf3foulpit@webdevdenzel-c735r.azure.mongodb.net/test?retryWrites=true";
 const DATABASE_NAME = "Denzel";
-var app = Express();
+let app = Express();
 
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: true }));
@@ -16,7 +15,7 @@ app.use(BodyParser.urlencoded({ extended: true }));
 app.listen(9292, () => {
 
     MongoClient.connect(
-        CONNECTION_URL,
+        uri,
         { useNewUrlParser: true },
         (error, client) => {
             if (error)
@@ -30,6 +29,7 @@ app.listen(9292, () => {
     );
 });
 
+//Populate the database with all the Denzel's movies from IMDb
 app.get("/movies/populate", async (request, response) => {
 
     const movies = await imdb(DENZEL_IMDB_ID);
@@ -46,6 +46,7 @@ app.get("/movies/populate", async (request, response) => {
 
 });
 
+//Fetch a random must-watch movie
 app.get("/movies", (request, response) => {
 
     collection
@@ -67,7 +68,7 @@ app.get("/movies", (request, response) => {
         });
 });
 
-
+//Search for Denzel's movie
 app.get("/movies/search", (request, response) => {
 
     console.log(request.query.limit);
@@ -91,6 +92,7 @@ app.get("/movies/search", (request, response) => {
         });
 });
 
+//Fetch a specific movie by its id
 app.get("/movies/:id", (request, response) => {
     collection.findOne({ id: request.params.id }, (err, result) => {
         if (err) {
@@ -102,6 +104,12 @@ app.get("/movies/:id", (request, response) => {
 
 });
 
+//Add watched date and review
 app.post("/movies/:id", (request, response) => {
-
+    collection.updateMany({id: request.params.id}, {$set: {date :request.body.date, review : request.body.review}}, {"upsert": true},(error, result) => {
+        if (error) {
+            return response.status(500).send(error);
+        }
+        response.send(result)
+    });
 });
