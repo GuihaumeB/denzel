@@ -10,6 +10,7 @@ const MongoClient = require("mongodb").MongoClient;
 const imdb = require('./imdb');
 const DENZEL_IMDB_ID = 'nm0000243';
 //Connect to MongoDB Atlas
+// TODO: Put ids in env file
 const uri = "mongodb+srv://GBZ73:Tiplouf3foulpit@webdevdenzel-c735r.azure.mongodb.net/test?retryWrites=true";
 const DATABASE_NAME = "Denzel";
 
@@ -116,7 +117,7 @@ let appGraph = express();
 appGraph.use('/graphql', express_graphql({
     schema: schema,
     rootValue: root,
-    graphiql: true
+    graphql: true
 }));
 
 let database, collection;
@@ -132,7 +133,7 @@ appGraph.listen(9292, () => {
         database = client.db(DATABASE_NAME);
         collection = database.collection("Denzel");
         console.log("Connected to " + DATABASE_NAME + "!");
-        console.log("Waiting for requests...");
+        console.log("Listening...");
     })
 });
 
@@ -141,6 +142,6 @@ let app = express();
 app.use('/graphql', express_graphql({
     schema: schema,
     rootValue: root,
-    graphiql: true
+    graphql: true
 }));
 app.listen(4000, () => console.log('Express GraphQL Server Now Running On localhost:4000/graphql'));
